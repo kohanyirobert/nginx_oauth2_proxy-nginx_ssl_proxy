@@ -1,0 +1,44 @@
+:source-highlighter: coderay
+:icons: font
+:toc: no
+
+= About
+
+This a Docker setup that starts three containers.
+
+. https://github.com/GoogleCloudPlatform/nginx-ssl-proxy[_nginx-ssl-proxy_]
+. https://github.com/bitly/oauth2_proxy[_oauth2_proxy_]
+. _nginx_
+
+The _nginx_ container is behind the _oauth2_proxy_ and that is behind the _nginx-ssl-proxy_ container.
+Only the first _nginx-ssl-proxy_ is exposed publicly.
+
+* _nginx_ is used to server static HTML pages.
+* _oauth2_proxy_ is used to restrict access to a particular Google domain (e.g. _company.com_).
+* _nginx-ssl-proxy_ is used to secure all this with a certificate.
+
+NOTE: Currently that certificate is self-signed.
+
+== Quickstart
+
+Clone the repo then use `init.sh` to generate necessary configuration files in the right places.
+
+You'll need the following to do it
+
+[source,shell]
+.Invoking `init.sh`
+----
+CLIENT_ID=<OAuth client ID> \ # <1>
+        CLIENT_SECRET=<OAUth client secret> \ # <1>
+        EMAIL_DOMAIN=company.com \
+        HOST_DOMAIN=app.company.com \
+        HOST_PORT=443 \
+        CERT_DAYS=365 \
+        CERT_BITS=2048 \
+        COOKIE_SECRET=<32 bytes random string> \ # <2>
+        ./init.sh
+----
+<1> See https://github.com/bitly/oauth2_proxy[oauth2_proxy's] README
+<2> `cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+
+Start everything with a simple `docker-compose up`.

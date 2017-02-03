@@ -1,0 +1,7 @@
+oauth2_proxy/
+secrets/
+nginx/index.html
+client_id.txt
+client_secret.txt
+*.swp
+*~

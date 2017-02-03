@@ -1,0 +1,33 @@
+version: '2'
+services:
+  nginx:
+    image: nginx
+    expose:
+      - "80"
+    volumes:
+      - ./nginx:/usr/share/nginx/html:ro
+  oauth2_proxy:
+    image: wingedkiwi/oauth2-proxy
+    links:
+      - nginx
+    expose:
+      - "80"
+    volumes:
+      - ./oauth2_proxy/:/opt/oauth2-proxy/etc:ro
+  nginx_ssl_proxy:
+    build:
+      context: ./nginx-ssl-proxy
+    image: nginx-ssl-proxy
+    links:
+      - oauth2_proxy
+    expose:
+      - "443"
+    ports:
+      - "10443:443"
+    environment:
+      ENABLE_SSL: 'true'
+      TARGET_SERVICE: oauth2_proxy:80
+    volumes:
+      - ./secrets/cert.pem:/etc/secrets/proxycert:ro
+      - ./secrets/key.pem:/etc/secrets/proxykey:ro
+      - ./secrets/dhparam.pem:/etc/secrets/dhparam:ro
