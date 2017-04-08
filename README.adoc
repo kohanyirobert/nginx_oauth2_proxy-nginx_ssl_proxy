@@ -45,4 +45,6 @@ CLIENT_ID=<OAuth client ID> \ # <2>
 <2> See https://github.com/bitly/oauth2_proxy[oauth2_proxy's] README
 <3> `cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 
+Finally edit the exposed port for _nginx-ssl-proxy_ to be the same as `HOST_PORT`.
+
 Start everything with a simple `docker-compose up`.
